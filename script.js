@@ -31,6 +31,9 @@ function startExperience() {
         // Adicionar event listeners para swipe
         addSwipeListeners();
         
+        // Configurar controles de vídeo ← ADICIONE ESTA LINHA
+        setupVideoControls();
+        
     }, 1500);
 }
 
@@ -66,11 +69,11 @@ function togglePlay() {
     isPlaying = !isPlaying;
     
     if (isPlaying) {
-        button.innerHTML = '<i class="fas fa-pause"></i>';
+        if (button) button.innerHTML = '<i class="fas fa-pause"></i>';
         startSlideshow();
     } else {
-        button.innerHTML = '<i class="fas fa-play"></i>';
-        clearInterval(slideInterval);
+        if (button) button.innerHTML = '<i class="fas fa-play"></i>';
+        stopSlideshow(); // Usa a nova função
     }
 }
 
@@ -231,3 +234,48 @@ function handleClick(event) {
     }
 }
 
+// Controle de vídeo - SOLUÇÃO DEFINITIVA
+function setupVideoControls() {
+    const videos = document.querySelectorAll('.memory-video');
+    
+    videos.forEach(video => {
+        // Quando vídeo começa a tocar
+        video.addEventListener('play', function() {
+            console.log('Vídeo começou - pausando slideshow');
+            clearInterval(slideInterval); // PARA o slideshow imediatamente
+            isPlaying = false;
+            
+            // Atualiza o botão de play/pause se existir
+            const playToggle = document.getElementById('playToggle');
+            if (playToggle) {
+                playToggle.innerHTML = '<i class="fas fa-play"></i>';
+            }
+        });
+        
+        // Quando vídeo é pausado
+        video.addEventListener('pause', function() {
+            console.log('Vídeo pausado');
+            // Não retoma automaticamente
+        });
+        
+        // Quando vídeo termina
+        video.addEventListener('ended', function() {
+            console.log('Vídeo terminou');
+            // Volta ao slideshow após 3 segundos
+            setTimeout(() => {
+                if (isPlaying) {
+                    startSlideshow();
+                }
+            }, 3000);
+        });
+        
+        // Impede que cliques no vídeo mudem de slide
+        video.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        video.addEventListener('touchstart', function(e) {
+            e.stopPropagation();
+        });
+    });
+}
