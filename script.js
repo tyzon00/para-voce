@@ -39,13 +39,9 @@ function startExperience() {
 
 // Adicionar listeners de swipe e clique
 function addSwipeListeners() {
-    // Swipe para mobile
-    document.addEventListener('touchstart', handleTouchStart, false);
-    document.addEventListener('touchend', handleTouchEnd, false);
-    
-    // Clique para desktop (áreas laterais)
-    document.addEventListener('click', handleClick, false);
-    document.addEventListener('touchstart', handleClick, false);
+    // Remove completamente a navegação por clique nas laterais
+    // Não adiciona nenhum event listener
+    console.log('Navegação por toque desabilitada - use apenas as setas');
 }
 
 
@@ -191,48 +187,6 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(createHeart, i * 300);
     }
 });
-
-// Detecção de Swipe (toque na tela)
-let touchStartX = 0;
-let touchEndX = 0;
-
-function handleTouchStart(event) {
-    touchStartX = event.changedTouches[0].screenX;
-}
-
-function handleTouchEnd(event) {
-    touchEndX = event.changedTouches[0].screenX;
-    handleSwipe();
-}
-
-function handleSwipe() {
-    const swipeThreshold = 50; // sensibilidade do swipe
-    
-    if (touchEndX < touchStartX - swipeThreshold) {
-        // Swipe para esquerda = próximo slide
-        nextSlide();
-    }
-    
-    if (touchEndX > touchStartX + swipeThreshold) {
-        // Swipe para direita = slide anterior
-        previousSlide();
-    }
-}
-
-// Detecção de clique/touch para desktop e mobile
-function handleClick(event) {
-    const screenWidth = window.innerWidth;
-    const clickX = event.clientX || event.touches[0].clientX;
-    
-    // Clique na direita = próximo slide
-    if (clickX > screenWidth * 0.7) {
-        nextSlide();
-    }
-    // Clique na esquerda = slide anterior
-    else if (clickX < screenWidth * 0.3) {
-        previousSlide();
-    }
-}
 
 // Controle de vídeo - SOLUÇÃO DEFINITIVA
 function setupVideoControls() {
